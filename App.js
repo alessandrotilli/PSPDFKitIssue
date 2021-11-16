@@ -15,7 +15,7 @@ const DOCUMENT = 'https://pspdfkit.com/downloads/pspdfkit-ios-quickstart-guide.p
 
 const App = () => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [source, setSource] = useState(null);
+  const [source, setSource] = useState('');
   const ref = useRef();
 
   const {width, height} = useWindowDimensions();
@@ -41,15 +41,20 @@ const App = () => {
         console.log('file downloaded');
         setSource(file);
       });
-
   }, []);
 
-  console.log('source', source);
+  if (!source) {
+    return (
+      <SafeAreaView>
+        <Text style={styles.loading}>loading</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <PSPDFKitView
-        document={DOCUMENT}
+        document={source}
         configuration={{
           thumbnailBarMode: 'scrollable',
           spreadFitting: 'fit',
@@ -79,6 +84,10 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
     flex: 1,
+  },
+  loading: {
+    fontSize: 24,
+    textAlign: 'center',
   },
   text: {
     backgroundColor: '#666',
